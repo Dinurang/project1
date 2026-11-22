@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS suntravels;
 USE suntravels;
 
 -- 1. Create 'user' table (Master authentication & role table)
-CREATE TABLE user (
+CREATE TABLE app_user (
     id BIGINT NOT NULL AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -22,7 +22,7 @@ CREATE TABLE contract_administrator (
     contact_no VARCHAR(30) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_admin_user 
-        FOREIGN KEY (user_id) REFERENCES user(id) 
+        FOREIGN KEY (user_id) REFERENCES app_user(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -35,7 +35,7 @@ CREATE TABLE call_center_agent (
     desk_extension VARCHAR(20),
     PRIMARY KEY (id),
     CONSTRAINT fk_agent_user 
-        FOREIGN KEY (user_id) REFERENCES user(id) 
+        FOREIGN KEY (user_id) REFERENCES app_user(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
