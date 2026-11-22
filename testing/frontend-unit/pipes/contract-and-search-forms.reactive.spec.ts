@@ -41,10 +41,10 @@ describe('Sun Travels Reactive Forms', () => {
 
   it('TC-FE-FORM-01: Contract form starts invalid when hotelName and validity dates are empty', () => {
     const form = buildContractForm();
-    expect(form.valid).toBeFalse();
-    expect(form.get('hotelName')?.hasError('required')).toBeTrue();
-    expect(form.get('validFrom')?.hasError('required')).toBeTrue();
-    expect(form.get('validTo')?.hasError('required')).toBeTrue();
+    expect(form.valid).toBe(false);
+    expect(form.get('hotelName')?.hasError('required')).toBe(true);
+    expect(form.get('validFrom')?.hasError('required')).toBe(true);
+    expect(form.get('validTo')?.hasError('required')).toBe(true);
   });
 
   it('TC-FE-FORM-02: Contract form enforces minimum bounds on markup, price, noOfRooms, and maxAdults', () => {
@@ -59,10 +59,10 @@ describe('Sun Travels Reactive Forms', () => {
       maxAdults: 0
     });
 
-    expect(form.get('markup')?.hasError('min')).toBeTrue();
-    expect(roomArray.at(0).get('price')?.hasError('min')).toBeTrue();
-    expect(roomArray.at(0).get('noOfRooms')?.hasError('min')).toBeTrue();
-    expect(roomArray.at(0).get('maxAdults')?.hasError('min')).toBeTrue();
+    expect(form.get('markup')?.hasError('min')).toBe(true);
+    expect(roomArray.at(0).get('price')?.hasError('min')).toBe(true);
+    expect(roomArray.at(0).get('noOfRooms')?.hasError('min')).toBe(true);
+    expect(roomArray.at(0).get('maxAdults')?.hasError('min')).toBe(true);
   });
 
   it('TC-FE-FORM-03: Supports dynamically adding and removing RoomType FormGroups in FormArray', () => {
@@ -94,18 +94,18 @@ describe('Sun Travels Reactive Forms', () => {
       maxAdults: 2
     });
 
-    expect(form.valid).toBeTrue();
+    expect(form.valid).toBe(true);
   });
 
   it('TC-FE-FORM-05: Agent search form validates checkInDate, nights >= 1, and roomRequests array', () => {
     const searchForm = buildSearchForm();
-    expect(searchForm.valid).toBeFalse();
+    expect(searchForm.valid).toBe(false);
 
     searchForm.patchValue({
       checkInDate: '2026-12-15',
       noOfNights: 3
     });
 
-    expect(searchForm.valid).toBeTrue();
+    expect(searchForm.valid).toBe(true);
   });
 });

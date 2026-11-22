@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "room_type")
+// Defines the hoteler's base price and inventory for one room category.
 public class RoomType {
 
     @Id

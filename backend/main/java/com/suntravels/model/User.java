@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "app_user")
+// Shared login entity. Role-specific profile data is stored in separate entities.
 public class User {
 
     @Id

@@ -38,6 +38,7 @@ export class SearchContractComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    // Display all contracts initially, then apply filters from the search controls.
     this.onSearch();
   }
 

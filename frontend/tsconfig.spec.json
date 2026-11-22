@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  },
+  "include": [
+    "../testing/frontend-unit/**/*.spec.ts",
+    "test-setup.ts",
+    "app/**/*.ts"
+  ]
+}

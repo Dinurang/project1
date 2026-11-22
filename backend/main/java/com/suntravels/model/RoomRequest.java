@@ -1,6 +1,7 @@
 package com.suntravels.model;
 
 public class RoomRequest {
+    // Each entry represents one requested room and the adults assigned to that room.
     private int adults;
 
     public RoomRequest() {}

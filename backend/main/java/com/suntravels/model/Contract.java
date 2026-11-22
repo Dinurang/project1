@@ -21,6 +21,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "contract")
+// A hotel contract may contain several room types and belongs to one administrator.
 public class Contract {
 
     @Id

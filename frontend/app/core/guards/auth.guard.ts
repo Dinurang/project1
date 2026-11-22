@@ -6,6 +6,7 @@ export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // Redirect unauthenticated visitors away from protected dashboards.
   if (authService.isLoggedIn()) {
     return true;
   }

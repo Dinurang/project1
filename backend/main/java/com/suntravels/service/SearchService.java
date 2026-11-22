@@ -27,11 +27,13 @@ public class SearchService {
     public List<SearchResult> search(SearchRequest request) {
         List<SearchResult> results = new ArrayList<>();
 
+        // Reject incomplete requests before touching the repository.
         if (request.getCheckInDate() == null || request.getNoOfNights() == null || request.getRoomRequests() == null) {
             return results;
         }
 
         LocalDate checkIn = request.getCheckInDate();
+        // Contracts cover stays from check-in through the night before checkout.
         LocalDate checkOut = checkIn.plusDays(request.getNoOfNights());
         int requestedRoomCount = request.getRoomRequests().size();
 

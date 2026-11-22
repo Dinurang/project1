@@ -8,6 +8,7 @@ import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // The JWT interceptor is registered for every HttpClient request.
     provideRouter(routes),
     provideHttpClient(withInterceptors([jwtInterceptor])),
     importProvidersFrom(ReactiveFormsModule, CommonModule)

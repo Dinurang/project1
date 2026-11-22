@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "contract_administrator")
+// Administrator-specific profile linked one-to-one with a login user.
 public class ContractAdministrator {
 
     @Id

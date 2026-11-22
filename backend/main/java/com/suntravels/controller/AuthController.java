@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+// Public authentication endpoints: signup and login do not require a JWT.
 public class AuthController {
 
     private final AuthService authService;

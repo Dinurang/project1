@@ -64,6 +64,7 @@
 
     <build>
         <sourceDirectory>main/java</sourceDirectory>
+        <testSourceDirectory>../testing</testSourceDirectory>
         <resources>
             <resource>
                 <directory>main/resources</directory>

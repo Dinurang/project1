@@ -6,6 +6,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
+  // Public authentication requests must not receive an Authorization header.
   if (token && !req.url.includes('/api/auth/')) {
     const cloned = req.clone({
       setHeaders: {

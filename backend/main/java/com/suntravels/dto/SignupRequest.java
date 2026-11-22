@@ -2,6 +2,7 @@ package com.suntravels.dto;
 
 import com.suntravels.model.Role;
 
+// Request payload for account registration; role-specific fields are validated by AuthService.
 public class SignupRequest {
     private String username;
     private String email;

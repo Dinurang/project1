@@ -16,6 +16,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
+// Creates, parses, and validates authentication tokens for protected API requests.
 public class JwtService {
 
     @Value("${jwt.secret:U3VuVHJhdmVsc1NlY3VyZUpXVFNlY3JldEtleTIwMjZGb3JBdXRoZW50aWNhdGlvbg==}")
@@ -30,6 +31,7 @@ public class JwtService {
     }
 
     public String generateToken(User user, String fullName) {
+        // Role and full name are stored in claims so authorization does not require a database lookup.
         return Jwts.builder()
                 .subject(user.getUsername())
                 .claims(Map.of(

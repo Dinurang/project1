@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/contracts")
+// Contract-administrator APIs for loading, listing, and filtering contracts.
 public class AdminContractController {
 
     private final ContractRepository contractRepo;
@@ -27,6 +28,7 @@ public class AdminContractController {
 
     @PostMapping
     public ResponseEntity<Contract> addContract(@RequestBody Contract contract, Authentication authentication) {
+        // Bind the saved contract to the administrator identified by the JWT.
         ContractAdministrator admin = adminRepo.findByUserUsername(authentication.getName())
                 .orElseThrow(() -> new IllegalStateException("Contract Administrator profile not found."));
         contract.setAdministrator(admin);

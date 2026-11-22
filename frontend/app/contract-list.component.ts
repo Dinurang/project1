@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
       <h2>Existing Contracts</h2>
       <div *ngFor="let c of contracts" class="card">
         <h3>{{c.hotelName}} <span style="font-size:14px; color:#666;">(Valid: {{c.validFrom}} to {{c.validTo}} | Markup: {{c.markup}}%)</span></h3>
+        <p *ngIf="c.administrator" style="color:#666;">
+          Saved by: {{c.administrator.fullName}} ({{c.administrator.employeeCode}})
+        </p>
         <table>
           <tr><th>Room Type</th><th>Base Price</th><th>Total Rooms</th><th>Max Adults</th></tr>
           <tr *ngFor="let rt of c.roomTypes">
@@ -28,6 +31,7 @@ export class ContractListComponent implements OnInit {
   http = inject(HttpClient);
   contracts: any[] = [];
   ngOnInit() {
+    // Load all saved contracts whenever this page opens.
     this.http.get('http://localhost:8080/api/admin/contracts').subscribe((res: any) => this.contracts = res);
   }
 }

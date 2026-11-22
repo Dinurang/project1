@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/agent")
+// Call-center search API that delegates all pricing and availability rules to SearchService.
 public class AgentSearchController {
 
     private final SearchService searchService;

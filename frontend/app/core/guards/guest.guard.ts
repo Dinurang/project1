@@ -6,6 +6,7 @@ export const guestGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // Logged-in users should not need to remain on the login/signup page.
   if (!authService.isLoggedIn()) {
     return true;
   }

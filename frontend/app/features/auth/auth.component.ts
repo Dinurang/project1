@@ -12,6 +12,7 @@ import { LoginRequest, SignupRequest, UserRole } from '../../core/models/auth.mo
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent {
+  // Login and signup share this page; the activeTab controls which form is shown.
   activeTab: 'login' | 'signup' = 'login';
   errorMessage = '';
   successMessage = '';

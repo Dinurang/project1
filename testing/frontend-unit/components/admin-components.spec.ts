@@ -4,9 +4,9 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
-import { AdminDashboardComponent } from '../../../frontend/src/app/admin-dashboard/admin-dashboard.component';
-import { ContractListComponent } from '../../../frontend/src/app/contract-list.component';
-import { AuthService } from '../../../frontend/src/app/core/services/auth.service';
+import { AdminDashboardComponent } from '../../../frontend/app/features/admin/admin-dashboard.component';
+import { ContractListComponent } from '../../../frontend/app/contract-list.component';
+import { AuthService } from '../../../frontend/app/core/services/auth.service';
 
 describe('Contract Administrator Components', () => {
   let httpMock: HttpTestingController;

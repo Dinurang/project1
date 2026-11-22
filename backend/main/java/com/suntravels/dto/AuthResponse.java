@@ -2,6 +2,7 @@ package com.suntravels.dto;
 
 import com.suntravels.model.Role;
 
+// Data returned after login so Angular can store the session and choose the dashboard.
 public class AuthResponse {
     private String token;
     private String username;

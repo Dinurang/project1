@@ -49,6 +49,7 @@ export class ContractFormComponent {
   fb = inject(FormBuilder);
   http = inject(HttpClient);
 
+  // The default markup follows the assignment's 15 percent hotel markup.
   contractForm = this.fb.group({
     hotelName: ['', Validators.required],
     validFrom: ['', Validators.required],
@@ -70,6 +71,7 @@ export class ContractFormComponent {
   removeRoomType(index: number) { this.roomTypes.removeAt(index); }
 
   onSubmit() {
+    // The contract includes nested roomTypes, which JPA saves as one contract/roomType group.
     this.http.post('http://localhost:8080/api/admin/contracts', this.contractForm.value).subscribe({
       next: () => { alert('Contract saved successfully!'); this.contractForm.reset({markup: 15}); this.roomTypes.clear(); this.addRoomType(); },
       error: () => alert('Error saving contract.')

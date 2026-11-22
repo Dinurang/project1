@@ -55,5 +55,6 @@ import { AuthService } from './core/services/auth.service';
   `]
 })
 export class AppComponent {
+  // The global navigation and role label react to AuthService.currentUser().
   constructor(public authService: AuthService) {}
 }

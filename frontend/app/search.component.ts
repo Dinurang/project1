@@ -68,6 +68,7 @@ export class SearchComponent {
   removeRoom(index: number) { this.roomRequests.removeAt(index); }
 
   onSearch() {
+    // The backend calculates contract validity, capacity, and the marked-up total.
     this.http.post('http://localhost:8080/api/agent/search', this.searchForm.value).subscribe({
       next: (res: any) => { this.results = res; this.searched = true; },
       error: () => alert('Error fetching results')

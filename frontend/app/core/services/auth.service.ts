@@ -8,6 +8,7 @@ import { AuthResponse, LoginRequest, SignupRequest, UserRole } from '../models/a
   providedIn: 'root'
 })
 export class AuthService {
+  // All authentication state is stored in localStorage so it survives page refreshes.
   private readonly apiUrl = 'http://localhost:8080/api/auth';
   private readonly storageKey = 'suntravels_auth';
 
@@ -22,6 +23,7 @@ export class AuthService {
   login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, payload).pipe(
       tap((res) => {
+        // Save the token and role together as the current browser session.
         localStorage.setItem(this.storageKey, JSON.stringify(res));
         this.currentUser.set(res);
       })

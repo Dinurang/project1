@@ -2,6 +2,7 @@ package com.suntravels.model;
 
 import java.math.BigDecimal;
 
+// Final response shown to a call-center agent for one hotel/room combination.
 public class SearchResult {
     private String hotelName;
     private String roomType;

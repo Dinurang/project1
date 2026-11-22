@@ -45,5 +45,6 @@ import { AuthService } from '../../core/services/auth.service';
   `]
 })
 export class AgentDashboardComponent {
+  // The dashboard exposes the agent search child route and current profile name.
   constructor(public authService: AuthService) {}
 }

@@ -34,6 +34,7 @@ public class AuthService {
 
     @Transactional
     public void signup(SignupRequest req) {
+        // Create the shared login record first, then its role-specific profile.
         if (userRepository.existsByUsername(req.getUsername())) {
             throw new IllegalArgumentException("Username is already taken.");
         }

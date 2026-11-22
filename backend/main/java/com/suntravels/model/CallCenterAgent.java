@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "call_center_agent")
+// Call-center-specific profile linked one-to-one with a login user.
 public class CallCenterAgent {
 
     @Id

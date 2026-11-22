@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Long> {
 
+    // The contract must cover both the check-in date and the final stay date.
     @Query("SELECT c FROM Contract c WHERE c.validFrom <= :checkIn AND c.validTo >= :checkOut")
     List<Contract> findValidContracts(@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
 }

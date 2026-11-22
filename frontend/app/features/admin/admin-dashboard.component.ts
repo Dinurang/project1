@@ -52,5 +52,6 @@ import { AuthService } from '../../core/services/auth.service';
   `]
 })
 export class AdminDashboardComponent {
+  // Dashboard links are role-protected by app.routes.ts and navigate to child views.
   constructor(public authService: AuthService) {}
 }

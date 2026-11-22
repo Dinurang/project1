@@ -1,5 +1,6 @@
 package com.suntravels.dto;
 
+// Credentials supplied to the public login endpoint.
 public class LoginRequest {
     private String username;
     private String password;

@@ -13,6 +13,7 @@ import { guestGuard } from './core/guards/guest.guard';
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
 
+  // Authentication guards prevent users from entering another role's dashboard.
   // Common First Page (Sign Up & Log In)
   {
     path: 'auth',

@@ -2,8 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router, provideRouter } from '@angular/router';
-import { jwtInterceptor } from '../../../frontend/src/app/core/interceptors/jwt.interceptor';
-import { AuthService } from '../../../frontend/src/app/core/services/auth.service';
+import { vi } from 'vitest';
+import { jwtInterceptor } from '../../../frontend/app/core/interceptors/jwt.interceptor';
+import { AuthService } from '../../../frontend/app/core/services/auth.service';
 
 describe('AuthService & JWT HTTP Interceptor', () => {
   let http: HttpClient;
@@ -40,7 +41,7 @@ describe('AuthService & JWT HTTP Interceptor', () => {
     httpMock = TestBed.inject(HttpTestingController);
     authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
   });
 
   afterEach(() => {
@@ -63,23 +64,24 @@ describe('AuthService & JWT HTTP Interceptor', () => {
       role: 'CONTRACT_ADMIN'
     });
 
-    expect(authService.isLoggedIn()).toBeTrue();
+    expect(authService.isLoggedIn()).toBe(true);
     expect(authService.getRole()).toBe('CONTRACT_ADMIN');
     expect(authService.currentUser()?.fullName).toBe('Nimal Perera');
+    authService.navigateToDashboard();
     expect(router.navigate).toHaveBeenCalledWith(['/admin/dashboard']);
   });
 
   it('TC-FE-SVC-02: jwtInterceptor attaches Authorization Bearer header when token is active', () => {
     const mockToken = createMockJwt(3600);
-    localStorage.setItem(
-      'suntravels_auth',
-      JSON.stringify({
-        token: mockToken,
-        username: 'admin_test',
-        fullName: 'Nimal Perera',
-        role: 'CONTRACT_ADMIN'
-      })
-    );
+    authService.login({ username: 'admin_test', password: 'Password123' }).subscribe();
+
+    const loginReq = httpMock.expectOne('http://localhost:8080/api/auth/login');
+    loginReq.flush({
+      token: mockToken,
+      username: 'admin_test',
+      fullName: 'Nimal Perera',
+      role: 'CONTRACT_ADMIN'
+    });
 
     http.get('http://localhost:8080/api/admin/contracts').subscribe();
 
@@ -92,7 +94,7 @@ describe('AuthService & JWT HTTP Interceptor', () => {
     http.post('http://localhost:8080/api/auth/login', { username: 'u', password: 'p' }).subscribe();
 
     const req = httpMock.expectOne('http://localhost:8080/api/auth/login');
-    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(req.request.headers.has('Authorization')).toBe(false);
     req.flush({});
   });
 
