@@ -1,0 +1,82 @@
+Story 1 — Adding Hotel Contracts by contract administrator (Loading)
+--------------------------------------------------------------------
+As a Sun Travels contract administrator,
+I want to enter a hotel's contract details—including valid dates, markup percentage, and multiple room types with base rates, room counts, and maximum adult capacities,
+so that the system maintains accurate pricing and inventory for customer bookings.
+
+Story 2 — Viewing Existing Contracts by contract administrator
+--------------------------------------------------------------
+As a Sun Travels contract administrator,
+I want to view a list of saved hotel contracts and their associated room types,
+so that I can verify contract validity windows and room specifications at a glance.
+
+Story 3 — Searching Available Rooms by call center agent
+--------------------------------------------------------
+As a Sun Travels call-center agent,
+I want to search for available rooms by entering a check-in date, number of nights, and the number of adults for each requested room,
+so that I can immediately quote marked-up total prices to customers over the phone, as total prices are calculated inside the program.
+
+
+Story 4 — Viewing Available Rooms by call center agent
+---------------------------------------------------------
+As a Sun Travels call-center agent,
+I want to view the matching room search results—displaying the hotel name, room type, marked-up total price, and availability status—
+so that I can compare options and accurately quote the best available room to the customer.
+
+Story 5 — Signup as contract administrator
+--------------------------------------------
+As a new Sun Travels contract administrator,
+I want to register an account using my details and select the contract administrator role,
+so that I can obtain authorized access to add and manage hotel contracts in the system.
+
+Story 6 — Signup as call center agent
+---------------------------------------
+As a new Sun Travels call-center agent,
+I want to register an account using my details and select the call-center agent role,
+so that I can obtain authorized access to search room availability and quote prices to customers.
+
+Story 7 — Login as contract administrator
+-------------------------------------------
+As a registered Sun Travels contract administrator,
+I want to log in with my credentials (username/email and password),
+so that I can securely access the contract creation and management features.
+
+Story 8 — Login as call center agent
+--------------------------------------
+As a registered Sun Travels call-center agent,
+I want to log in with my credentials (username/email and password),
+so that I can securely access the room availability search and quotation features.
+
+Story 9 — Homepage User Interface
+-----------------------------------
+As a Sun Travels user (contract administrator or call-center agent),
+I want to view a clean, well-structured homepage with clear navigation links to login, signup, contract management, and room search,
+so that I can quickly navigate to my role-specific workspace and use the system efficiently.
+
+
+
+
+
+
+
+
+
+Acceptance Criteria (Definition of Done)
+A user story is paired with acceptance criteria—a concrete checklist of rules and edge cases that 
+must pass before the feature is considered complete.
+
+
+Traits of a Good User Story (INVEST)
+Teams evaluate whether a user story is ready for development using the INVEST criteria:
+
+Independent: Can be built and tested on its own without waiting on unrelated features.
+
+Negotiable: Describes the user goal rather than rigid UI layouts or database columns, leaving room for developer design choices.
+
+Valuable: Delivers clear value to an end user or stakeholder.
+
+Estimable: Clear enough that developers can estimate how long it will take to build.
+
+Small: Sized to fit comfortably within a single development sprint (typically a few days of work).
+
+Testable: Includes clear acceptance criteria so QA or automated tests can verify pass/fail objectively.

@@ -1,0 +1,50 @@
+.filter-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.filter-group {
+  flex: 1;
+  min-width: 220px;
+}
+.filter-group input {
+  width: 100%;
+}
+.actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+.btn-secondary {
+  background: #6c757d;
+}
+.btn-secondary:hover {
+  background: #545b62;
+}
+.contract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+.contract-header h3 {
+  margin: 0;
+  color: #004b87;
+}
+.badge {
+  background: #e6f0fa;
+  color: #004b87;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+.dates {
+  margin: 12px 0 5px;
+  color: #444;
+}
+.error-box {
+  border-left: 4px solid #d9534f;
+  color: #a94442;
+}

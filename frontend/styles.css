@@ -1,0 +1,11 @@
+
+* { box-sizing: border-box; }
+.btn { background: #004b87; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+.btn:hover { background: #00325a; }
+.btn-danger { background: #d9534f; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+label { display: block; margin-bottom: 5px; font-weight: bold; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+th { background-color: #f8f9fa; }
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }

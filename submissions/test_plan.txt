@@ -1,0 +1,73 @@
+DB/
+
+Your Repositories & Entities (Contract, RoomType)
+        │
+        ▼
+      [JPA]          ◄── Standard Java annotations (@Entity, @OneToMany) & JPQL
+        │
+        ▼
+   [Hibernate]       ◄── The ORM engine that implements JPA
+        │
+        ▼
+  [MySQL Dialect]    ◄── Translates Hibernate actions into native MySQL SQL
+        │
+        ▼
+  MySQL Database     ◄── Executes the SQL and enforces InnoDB constraints
+
+
+
+- test admin is created before every operation
+- populate with dummy data before a test
+
+1 insert to user and contract_administrator 
+2 insert to user and call_center_agent
+3 insert a contract
+4 insertion to contract records its contract_administrator creator.
+5 insertion of contract will inserts to room_type simulataneously
+6 date range inclusion for search queries. 
+7 expired contract date 
+8 future contract date
+9 'Available' outcomes - sufficient amount of room count of certain 'type', where 'capacity' of that 'type' greater than or equal to guest request 
+10 'Unavailable' - No Outcome scenarios
+11 read all contracts
+12 read user with login credentials
+13 search contracts by hotel name
+14 search contracts by valid date 
+15 search contarcts by hotel name and valid date 
+
+
+backend-unit/business logic
+
+- availability computation
+- no: of nights calculation
+- calculation of cost - no: of persons
+- cost calculation - no: of rooms
+- cost calculation - no: persons and rooms
+
+
+In a Spring Boot application, an incoming HTTP request passes through four distinct layers before any data 
+reaches MySQL. Testing REST Controllers, CORS, Authentication, and End-to-End API (spring-db) separately 
+ensures each layer is verified in isolation rather than bundled into one opaque test:
+
+
+Browser (localhost:4200)
+   │
+   ▼
+[1. CORS Filter]            ──► Checks Origin, HTTP Method, and Allowed Headers
+   │
+   ▼
+[2. Security / JWT Filter]  ──► Validates Bearer Token & Role (ADMIN vs. AGENT)
+   │
+   ▼
+[3. REST Controller]        ──► Parses JSON/Params, calls Service, formats HTTP Status
+   │
+   ▼
+[4. Full API + MySQL]       ──► Executes the entire stack together against real DB tables
+
+
+backend-unit/REST controllers
+
+backend-unit/exception handling
+
+
+

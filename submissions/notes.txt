@@ -1,0 +1,3 @@
+SearchRequest, RoomRequest, and SearchResult are non-persistent DTOs used only for REST API JSON 
+payloads, so they do not appear in the database ER diagram.
+

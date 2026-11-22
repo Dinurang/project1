@@ -1,0 +1,94 @@
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+.auth-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 460px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+.brand-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.brand-header h1 {
+  margin: 0;
+  color: #004b87;
+  font-size: 26px;
+}
+.brand-header p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 14px;
+}
+.tab-bar {
+  display: flex;
+  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 20px;
+}
+.tab-bar button {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+.tab-bar button.active {
+  color: #004b87;
+  border-bottom-color: #004b87;
+}
+.role-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.role-selector button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f8f9fa;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+}
+.role-selector button.selected {
+  background: #e6f0fa;
+  border-color: #004b87;
+  color: #004b87;
+}
+input {
+  width: 100%;
+  margin-bottom: 6px;
+}
+.submit-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.alert {
+  padding: 10px 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}

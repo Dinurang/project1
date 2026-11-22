@@ -1,0 +1,83 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="brand-header">
+      <h1>Sun Travels</h1>
+      <p>Hotel Contract &amp; Reservation Portal</p>
+    </div>
+
+    <div class="tab-bar">
+      <button type="button" [class.active]="activeTab === 'login'" (click)="switchTab('login')">
+        Log In
+      </button>
+      <button type="button" [class.active]="activeTab === 'signup'" (click)="switchTab('signup')">
+        Sign Up
+      </button>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <!-- LOGIN FORM -->
+    <form *ngIf="activeTab === 'login'" (ngSubmit)="onLogin()">
+      <label for="loginUsername">Username</label>
+      <input id="loginUsername" type="text" [(ngModel)]="loginData.username" name="loginUsername" required placeholder="Enter your username">
+
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" [(ngModel)]="loginData.password" name="loginPassword" required placeholder="Enter your password">
+
+      <button type="submit" class="btn submit-btn" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Log In' }}
+      </button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form *ngIf="activeTab === 'signup'" (ngSubmit)="onSignup()">
+      <label>Select Your Role</label>
+      <div class="role-selector">
+        <button type="button"
+                [class.selected]="signupData.role === 'CALL_CENTER_AGENT'"
+                (click)="selectRole('CALL_CENTER_AGENT')">
+          Call Center Agent
+        </button>
+        <button type="button"
+                [class.selected]="signupData.role === 'CONTRACT_ADMIN'"
+                (click)="selectRole('CONTRACT_ADMIN')">
+          Contract Administrator
+        </button>
+      </div>
+
+      <label for="fullName">Full Name</label>
+      <input id="fullName" type="text" [(ngModel)]="signupData.fullName" name="fullName" required placeholder="e.g. Kasun Perera">
+
+      <label for="username">Username</label>
+      <input id="username" type="text" [(ngModel)]="signupData.username" name="username" required placeholder="Choose a username">
+
+      <label for="email">Email Address</label>
+      <input id="email" type="email" [(ngModel)]="signupData.email" name="email" required placeholder="name@suntravels.com">
+
+      <label for="password">Password</label>
+      <input id="password" type="password" [(ngModel)]="signupData.password" name="password" required minlength="6" placeholder="Minimum 6 characters">
+
+      <!-- Role-specific fields -->
+      <ng-container *ngIf="signupData.role === 'CALL_CENTER_AGENT'">
+        <label for="agentCode">Agent Code *</label>
+        <input id="agentCode" type="text" [(ngModel)]="signupData.agentCode" name="agentCode" required placeholder="e.g. AGT-101">
+
+        <label for="deskExtension">Desk Extension (Optional)</label>
+        <input id="deskExtension" type="text" [(ngModel)]="signupData.deskExtension" name="deskExtension" placeholder="e.g. 402">
+      </ng-container>
+
+      <ng-container *ngIf="signupData.role === 'CONTRACT_ADMIN'">
+        <label for="employeeCode">Employee Code *</label>
+        <input id="employeeCode" type="text" [(ngModel)]="signupData.employeeCode" name="employeeCode" required placeholder="e.g. ADM-201">
+
+        <label for="contactNo">Contact Number *</label>
+        <input id="contactNo" type="text" [(ngModel)]="signupData.contactNo" name="contactNo" required placeholder="e.g. +94 77 123 4567">
+      </ng-container>
+
+      <button type="submit" class="btn submit-btn" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+  </div>
+</div>
