@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "user")
 // Shared login entity. Role-specific profile data is stored in separate entities.
 public class User {
 

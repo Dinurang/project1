@@ -45,36 +45,34 @@ public class SearchService {
                     .add(BigDecimal.ONE);
 
             for (RoomType roomType : contract.getRoomTypes()) {
-                if (roomType.getNoOfRooms() < requestedRoomCount) {
-                    continue;
-                }
-
-                boolean allRoomsFit = true;
+                boolean allRoomsFit = roomType.getNoOfRooms() >= requestedRoomCount;
                 int totalAdults = 0;
 
-                for (RoomRequest roomReq : request.getRoomRequests()) {
-                    if (roomReq.getAdults() > roomType.getMaxAdults()) {
-                        allRoomsFit = false;
-                        break;
-                    }
-                    totalAdults += roomReq.getAdults();
-                }
-
                 if (allRoomsFit) {
-                    // Base rate is per adult per night * total adults * nights * (1 + markup%)
-                    BigDecimal totalPrice = roomType.getPrice()
-                            .multiply(BigDecimal.valueOf(totalAdults))
-                            .multiply(BigDecimal.valueOf(request.getNoOfNights()))
-                            .multiply(markupMultiplier)
-                            .setScale(2, RoundingMode.HALF_UP);
-
-                    results.add(new SearchResult(
-                            contract.getHotelName(),
-                            roomType.getTypeName(),
-                            totalPrice,
-                            "Available"
-                    ));
+                    for (RoomRequest roomReq : request.getRoomRequests()) {
+                        if (roomReq.getAdults() > roomType.getMaxAdults()) {
+                            allRoomsFit = false;
+                            break;
+                        }
+                        totalAdults += roomReq.getAdults();
+                    }
                 }
+
+                // Base rate is per adult per night * total adults * nights * (1 + markup%).
+                BigDecimal totalPrice = allRoomsFit
+                        ? roomType.getPrice()
+                                .multiply(BigDecimal.valueOf(totalAdults))
+                                .multiply(BigDecimal.valueOf(request.getNoOfNights()))
+                                .multiply(markupMultiplier)
+                                .setScale(2, RoundingMode.HALF_UP)
+                        : null;
+
+                results.add(new SearchResult(
+                        contract.getHotelName(),
+                        roomType.getTypeName(),
+                        totalPrice,
+                        allRoomsFit ? "Available" : "Unavailable"
+                ));
             }
         }
         return results;

@@ -350,23 +350,25 @@ class SpringDbTest {
                 }
                 """;
 
-        // Superior Twin (maxAdults=2) is filtered out; Luxury Panoramic Suite qualifies:
+        // Superior Twin is unavailable because its per-room capacity is too low;
+        // Luxury Panoramic Suite qualifies:
         // Price = $100.00 * 5 adults * 3 nights * 1.15 markup = $1,725.00
         mockMvc.perform(post("/api/agent/search")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + agentToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(searchPayload))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama')].roomType").value("Luxury Panoramic Suite"))
-                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama')].price").value(1725.0))
-                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama')].status").value("Available"));
+                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama' && @.status == 'Available')].roomType").value("Luxury Panoramic Suite"))
+                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama' && @.status == 'Available')].price").value(1725.0))
+                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama' && @.status == 'Available')].status").value("Available"))
+                .andExpect(jsonPath("$[?(@.hotelName == 'Heritance Kandalama' && @.status == 'Unavailable')].roomType").value("Superior Twin"));
     }
 
     // -------------------------------------------------------------------------
     // 5. End-to-End Agent Search excludes expired contracts and insufficient room counts
     // -------------------------------------------------------------------------
     @Test
-    @DisplayName("TC-E2E-05: POST /api/agent/search excludes expired MySQL contracts and insufficient room inventory")
+    @DisplayName("TC-E2E-05: POST /api/agent/search excludes expired MySQL contracts and marks insufficient inventory unavailable")
     void shouldExcludeExpiredContractsAndInsufficientInventoryEndToEnd() throws Exception {
         String adminToken = registerAndLoginAdmin(
                 "e2e_admin_05", "e2e_admin_05@suntravels.com", "EMP-E2E-05", "Saman Kumara"
@@ -415,7 +417,8 @@ class SpringDbTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(searchRequest))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.hotelName == 'Boutique Villa Galle')]").isEmpty());
+                .andExpect(jsonPath("$[?(@.hotelName == 'Boutique Villa Galle' && @.status == 'Unavailable')].status")
+                        .value("Unavailable"));
     }
 
     // -------------------------------------------------------------------------

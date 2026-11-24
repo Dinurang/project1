@@ -40,7 +40,10 @@ import { CommonModule } from '@angular/common';
           <tr *ngFor="let res of results">
             <td>{{res.hotelName}}</td>
             <td>{{res.roomType}}</td>
-            <td style="font-weight:bold;">\${{res.price | number:'1.2-2'}}</td>
+            <td style="font-weight:bold;">
+              <span *ngIf="res.price !== null && res.price !== undefined; else unavailablePrice">\${{res.price | number:'1.2-2'}}</span>
+              <ng-template #unavailablePrice>-</ng-template>
+            </td>
             <td [ngStyle]="{'color': res.status === 'Available' ? 'green' : 'red', 'font-weight': 'bold'}">{{res.status}}</td>
           </tr>
         </table>

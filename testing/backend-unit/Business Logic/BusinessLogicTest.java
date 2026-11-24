@@ -75,7 +75,7 @@ class BusinessLogicTest {
     // 1. Availability computation (sufficient room count & per-room adult capacity)
     // -------------------------------------------------------------------------
     @Test
-    @DisplayName("TC-BL-01: Returns 'Available' only for room types meeting both room count and every room's adult capacity")
+    @DisplayName("TC-BL-01: Marks room types as available only when room count and adult capacity are sufficient")
     void shouldComputeAvailabilityBasedOnRoomCountAndAdultCapacity() {
         LocalDate checkIn = LocalDate.of(2026, 12, 10);
         LocalDate expectedCheckOut = LocalDate.of(2026, 12, 13);
@@ -92,16 +92,26 @@ class BusinessLogicTest {
 
         List<SearchResult> results = searchService.search(request);
 
-        // Standard Double (maxAdults=2) fails Room 1 (3 adults); Family Suite (2 rooms >= 2, maxAdults=4 >= 3) succeeds
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0).getHotelName()).isEqualTo("Cinnamon Grand Colombo");
-        assertThat(results.get(0).getRoomType()).isEqualTo("Family Suite");
-        assertThat(results.get(0).getStatus()).isEqualTo("Available");
+        // Standard Double fails Room 1 (3 adults); Family Suite succeeds.
+        assertThat(results).hasSize(2);
+        SearchResult standardResult = results.stream()
+                .filter(r -> "Standard Double".equals(r.getRoomType()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(standardResult.getStatus()).isEqualTo("Unavailable");
+        assertThat(standardResult.getPrice()).isNull();
+
+        SearchResult familyResult = results.stream()
+                .filter(r -> "Family Suite".equals(r.getRoomType()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(familyResult.getHotelName()).isEqualTo("Cinnamon Grand Colombo");
+        assertThat(familyResult.getStatus()).isEqualTo("Available");
     }
 
     @Test
-    @DisplayName("TC-BL-02: Returns empty list when requested room count or adult capacity cannot be satisfied")
-    void shouldReturnEmptyWhenRoomsOrCapacityAreInsufficient() {
+    @DisplayName("TC-BL-02: Marks all room types unavailable when room count or adult capacity is insufficient")
+    void shouldMarkRoomsUnavailableWhenRoomsOrCapacityAreInsufficient() {
         LocalDate checkIn = LocalDate.of(2026, 12, 10);
         LocalDate expectedCheckOut = LocalDate.of(2026, 12, 12);
 
@@ -125,8 +135,12 @@ class BusinessLogicTest {
                 List.of(new RoomRequest(5))
         );
 
-        assertThat(searchService.search(tooManyRooms)).isEmpty();
-        assertThat(searchService.search(tooManyAdults)).isEmpty();
+        assertThat(searchService.search(tooManyRooms))
+                .extracting(SearchResult::getStatus)
+                .containsOnly("Unavailable");
+        assertThat(searchService.search(tooManyAdults))
+                .extracting(SearchResult::getStatus)
+                .containsOnly("Unavailable");
     }
 
     // -------------------------------------------------------------------------
@@ -177,8 +191,11 @@ class BusinessLogicTest {
         List<SearchResult> results = searchService.search(request);
 
         // Cost = $200.00 * 3 persons * 1 night * 1.15 = $690.00
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0).getPrice()).isEqualByComparingTo("690.00");
+        SearchResult familyResult = results.stream()
+                .filter(r -> "Available".equals(r.getStatus()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(familyResult.getPrice()).isEqualByComparingTo("690.00");
     }
 
     // -------------------------------------------------------------------------
@@ -203,9 +220,12 @@ class BusinessLogicTest {
         List<SearchResult> results = searchService.search(request);
 
         // Total adults across 4 rooms = 4; Cost = $100.00 * 4 * 1 night * 1.15 = $460.00
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0).getRoomType()).isEqualTo("Standard Double");
-        assertThat(results.get(0).getPrice()).isEqualByComparingTo("460.00");
+        SearchResult standardResult = results.stream()
+                .filter(r -> "Available".equals(r.getStatus()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(standardResult.getRoomType()).isEqualTo("Standard Double");
+        assertThat(standardResult.getPrice()).isEqualByComparingTo("460.00");
     }
 
     // -------------------------------------------------------------------------
@@ -247,8 +267,11 @@ class BusinessLogicTest {
 
         // Base = $99.00 * 5 adults * 3 nights = $1,485.00
         // Marked-up = 1485.00 * 1.133300 = 1682.9505 -> HALF_UP to 2 decimals = $1,682.95
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0).getPrice()).isEqualByComparingTo("1682.95");
+        SearchResult availableResult = results.stream()
+                .filter(r -> "Available".equals(r.getStatus()))
+                .findFirst()
+                .orElseThrow();
+        assertThat(availableResult.getPrice()).isEqualByComparingTo("1682.95");
     }
 
     // -------------------------------------------------------------------------

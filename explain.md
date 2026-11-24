@@ -118,7 +118,7 @@ For example:
 
 ## Database tables
 
-- `app_user`: login username, email, password hash, and role.
+- `user`: login username, email, password hash, and role.
 - `contract_administrator`: administrator profile linked to a user.
 - `call_center_agent`: agent profile linked to a user.
 - `contract`: hotel, validity dates, markup, and administrator.

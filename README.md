@@ -79,9 +79,4 @@ npx ng test --watch=false --include="../testing/frontend-unit/route-guards/auth-
 npx ng test --watch=false --include="../testing/frontend-unit/services/auth-and-jwt.service.spec.ts"
 ```
 
-### Production build
 
-```powershell
-cd C:\Users\DELL\internship_projects\assignment1\frontend
-npm run build
-```
