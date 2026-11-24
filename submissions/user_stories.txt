@@ -1,58 +1,105 @@
-Story 1 — Adding Hotel Contracts by contract administrator (Loading)
+====================
+=== User Stories ===
+====================
+
+
+Story 1 — Adding Hotel Contracts by Contract Administrator (Loading)
 --------------------------------------------------------------------
 As a Sun Travels contract administrator,
-I want to enter a hotel's contract details—including valid dates, markup percentage, and multiple room types with base rates, room counts, and maximum adult capacities,
-so that the system maintains accurate pricing and inventory for customer bookings.
+I want to enter a hotel's contract details including hotel name, contract validity dates, markup (defaulting to 15%), and multiple room types with base rates, room counts, and maximum adult capacities—
+so that the system stores accurate contract rates, markups, and inventory for customer bookings.
 
-Story 2 — Viewing Existing Contracts by contract administrator
---------------------------------------------------------------
+Acceptance Criteria:
+- Requires hotel name, valid_from date, valid_to date (valid_to >= valid_from), prefered markup value (default is 15%), and at least one room type.
+- Each room type requires a room type name, non-negative base price, non-negative room count, and maximum adults per room (>= 1).
+- Persists the contract and room types via the backend API and displays clear confirmation or validation errors without freezing the UI.
+
+Story 2 — Viewing and Searching Existing Contracts by Contract Administrator
+-------------------------------------------------------------------------
 As a Sun Travels contract administrator,
-I want to view a list of saved hotel contracts and their associated room types,
-so that I can verify contract validity windows and room specifications at a glance.
+I want to view and search saved hotel contracts and their associated room types,
+so that I can verify contract validity windows, markups, and room specifications at a glance.
 
-Story 3 — Searching Available Rooms by call center agent
+Acceptance Criteria:
+- Displays contract details (hotel name, valid_from, valid_to, markup) and associated room types (type name, base price, room count, max adults).
+- Supports searching/filtering contracts (such as by hotel name or validity dates) while keeping the UI responsive.
+- Shows a clear empty or no-match message when no contracts match the query.
+
+Story 3 — Searching Available Rooms by Call Center Agent
 --------------------------------------------------------
 As a Sun Travels call-center agent,
 I want to search for available rooms by entering a check-in date, number of nights, and the number of adults for each requested room,
 so that I can immediately quote marked-up total prices to customers over the phone, as total prices are calculated inside the program.
 
+Acceptance Criteria:
+- Accepts check-in date, number of nights (>= 1), and one or more room requests specifying adult count per room.
+- Considers only contracts whose valid period covers the entire stay (check-in date through check-out date).
+- Marks a room type as Available only if enough rooms of that type exist to accommodate all requested rooms and adult capacity constraints are met; otherwise marks it Unavailable.
+- Calculates customer price as: hotelier_rate * markup * nights * total_adults.
+- Keeps the UI responsive while submitting and processing the search.
 
-Story 4 — Viewing Available Rooms by call center agent
+Story 4 — Viewing Available Rooms by Call Center Agent
 ---------------------------------------------------------
 As a Sun Travels call-center agent,
 I want to view the matching room search results—displaying the hotel name, room type, marked-up total price, and availability status—
 so that I can compare options and accurately quote the best available room to the customer.
 
-Story 5 — Signup as contract administrator
+Acceptance Criteria:
+- Displays hotel name, room type, calculated marked-up total price, and availability status (Available or Unavailable) for each result.
+- Clearly distinguishes Available options from Unavailable options.
+- Displays a clear message when no matching rooms or contracts are found.
+
+Story 5 — Signup as Contract Administrator
 --------------------------------------------
 As a new Sun Travels contract administrator,
 I want to register an account using my details and select the contract administrator role,
 so that I can obtain authorized access to add and manage hotel contracts in the system.
 
-Story 6 — Signup as call center agent
+Acceptance Criteria:
+- Validates required registration details, unique username/email, and password rules.
+- Creates the account with the contract administrator role and grants access to contract management features.
+- Displays clear error messages on invalid input or duplicate account details.
+
+Story 6 — Signup as Call Center Agent
 ---------------------------------------
 As a new Sun Travels call-center agent,
 I want to register an account using my details and select the call-center agent role,
 so that I can obtain authorized access to search room availability and quote prices to customers.
 
-Story 7 — Login as contract administrator
+Acceptance Criteria:
+- Validates required registration details, unique username/email, and password rules.
+- Creates the account with the call-center agent role and grants access to room search and quotation features.
+- Displays clear error messages on invalid input or duplicate account details.
+
+Story 7 — Login as Contract Administrator
 -------------------------------------------
 As a registered Sun Travels contract administrator,
 I want to log in with my credentials (username/email and password),
 so that I can securely access the contract creation and management features.
 
-Story 8 — Login as call center agent
+Acceptance Criteria:
+- Authenticates valid contract administrator credentials and routes to the contract management workspace.
+- Rejects invalid credentials with a clear error message.
+
+Story 8 — Login as Call Center Agent
 --------------------------------------
 As a registered Sun Travels call-center agent,
 I want to log in with my credentials (username/email and password),
 so that I can securely access the room availability search and quotation features.
 
+Acceptance Criteria:
+- Authenticates valid call-center agent credentials and routes to the room availability search workspace.
+- Rejects invalid credentials with a clear error message.
+
 Story 9 — Homepage User Interface
 -----------------------------------
 As a Sun Travels user (contract administrator or call-center agent),
-I want to view a clean, well-structured homepage with clear navigation links to login, signup, contract management, and room search,
+I want to view a homepage with clear navigation links to login, signup, contract management, and room search,
 so that I can quickly navigate to my role-specific workspace and use the system efficiently.
 
+Acceptance Criteria:
+- Provides clear navigation links/actions for login, signup, contract management, and room search according to user state and role.
+- Loads smoothly and remains responsive during navigation.
 
 
 
@@ -60,6 +107,17 @@ so that I can quickly navigate to my role-specific workspace and use the system 
 
 
 
+
+
+
+
+
+
+
+
+
+
+======================================================================================================
 
 Acceptance Criteria (Definition of Done)
 A user story is paired with acceptance criteria—a concrete checklist of rules and edge cases that 
