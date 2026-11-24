@@ -16,7 +16,7 @@
             "polyfills": [
               "zone.js"
             ],
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "tsconfig.json",
             "assets": [
               "index.html"
             ],
@@ -60,7 +60,7 @@
           "options": {
             "buildTarget": "sun-travels:build:development",
             "runner": "vitest",
-            "tsConfig": "tsconfig.spec.json",
+            "tsConfig": "tsconfig.json",
             "include": [
               "../testing/frontend-unit/**/*.spec.ts"
             ]

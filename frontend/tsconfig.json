@@ -2,6 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
+    "rootDir": "..",
+    "types": ["vitest/globals"],
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -15,5 +17,10 @@
     "module": "preserve",
     "moduleResolution": "bundler",
     "lib": ["ES2022", "dom"]
-  }
+  },
+  "include": [
+    "main.ts",
+    "app/**/*.ts",
+    "../testing/frontend-unit/**/*.spec.ts"
+  ]
 }
