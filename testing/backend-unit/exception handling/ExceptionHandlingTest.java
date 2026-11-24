@@ -41,6 +41,7 @@ import com.suntravels.service.SearchService;
 
 @ExtendWith(MockitoExtension.class)
 class ExceptionHandlingTest {
+    // Verifies that failures from persistence, JSON parsing, validation, and authentication return safe responses.
 
     @Mock
     private ContractRepository contractRepo;

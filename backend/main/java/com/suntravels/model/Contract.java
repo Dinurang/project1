@@ -45,6 +45,7 @@ public class Contract {
     @Column(nullable = false, precision = 6, scale = 2)
     private BigDecimal markup;
 
+    // Saving or removing a contract also saves or removes its associated room types.
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "contract_id", nullable = false)
     private List<RoomType> roomTypes = new ArrayList<>();

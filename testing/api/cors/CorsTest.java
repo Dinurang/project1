@@ -23,6 +23,7 @@ import jakarta.servlet.Filter;
 @SpringBootTest(classes = SunTravelsApplication.class)
 @Transactional
 class CorsTest {
+    // Verifies allowed and blocked browser origins, methods, and request headers.
 
     private static final String ALLOWED_ORIGIN = "http://localhost:4200";
     private static final String DISALLOWED_ORIGIN = "http://malicious-site.example.com";

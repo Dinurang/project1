@@ -42,6 +42,7 @@ import com.suntravels.service.SearchService;
 
 @ExtendWith(MockitoExtension.class)
 class RESTControllerTest {
+    // Verifies HTTP request binding and JSON responses while services and repositories are mocked.
 
     @Mock
     private ContractRepository contractRepo;

@@ -6,6 +6,7 @@ export interface SignupRequest {
   password: string;
   role: UserRole;
   fullName: string;
+  // These fields are required by their corresponding role on the backend.
   employeeCode?: string;
   contactNo?: string;
   agentCode?: string;

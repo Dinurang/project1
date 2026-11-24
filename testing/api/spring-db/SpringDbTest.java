@@ -38,6 +38,7 @@ import jakarta.servlet.Filter;
 @SpringBootTest(classes = SunTravelsApplication.class)
 @Transactional
 class SpringDbTest {
+    // Runs end-to-end workflows through HTTP, security, services, JPA, and MySQL.
 
     @Autowired
     private WebApplicationContext webApplicationContext;

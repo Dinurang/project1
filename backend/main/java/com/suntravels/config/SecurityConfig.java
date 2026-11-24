@@ -31,11 +31,13 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
+            // JWT authentication is stateless, so Spring Security must not create HTTP sessions.
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                // JWT roles become Spring authorities named ROLE_CONTRACT_ADMIN or ROLE_CALL_CENTER_AGENT.
                 .requestMatchers("/api/admin/**").hasRole("CONTRACT_ADMIN")
                 .requestMatchers("/api/agent/**").hasRole("CALL_CENTER_AGENT")
                 .anyRequest().authenticated()

@@ -48,6 +48,7 @@ public class AdminContractController {
         return contractRepo.findAll().stream()
                 .filter(c -> hotelName == null || hotelName.isBlank() ||
                         c.getHotelName().toLowerCase().contains(hotelName.trim().toLowerCase()))
+                // Exclude contracts whose validity period does not cover the requested date.
                 .filter(c -> activeDate == null ||
                         (!c.getValidFrom().isAfter(activeDate) && !c.getValidTo().isBefore(activeDate)))
                 .toList();

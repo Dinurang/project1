@@ -7,6 +7,7 @@ import { jwtInterceptor } from '../../../frontend/app/core/interceptors/jwt.inte
 import { AuthService } from '../../../frontend/app/core/services/auth.service';
 
 describe('AuthService & JWT HTTP Interceptor', () => {
+  // Verifies browser session state and attachment or omission of JWT request headers.
   let http: HttpClient;
   let httpMock: HttpTestingController;
   let authService: AuthService;

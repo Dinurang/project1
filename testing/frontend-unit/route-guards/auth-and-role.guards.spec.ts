@@ -6,6 +6,7 @@ import { authGuard } from '../../../frontend/app/core/guards/auth.guard';
 import { roleGuard } from '../../../frontend/app/core/guards/role.guard';
 
 describe('Authentication & Role Route Guards', () => {
+  // Verifies unauthenticated redirects and separation between administrator and agent routes.
   let authServiceSpy: {
     isLoggedIn: ReturnType<typeof vi.fn>;
     getRole: ReturnType<typeof vi.fn>;

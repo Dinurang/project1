@@ -24,6 +24,7 @@ import com.suntravels.service.SearchService;
 
 @ExtendWith(MockitoExtension.class)
 class BusinessLogicTest {
+    // Covers search business rules independently of HTTP and database concerns.
 
     @Mock
     private ContractRepository contractRepository;

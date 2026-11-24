@@ -33,6 +33,7 @@ import jakarta.persistence.EntityManager;
 @ContextConfiguration(classes = SunTravelsApplication.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DbTest {
+    // Exercises JPA entities and repositories against the configured MySQL test database.
 
     @Autowired
     private TestEntityManager testEntityManager;

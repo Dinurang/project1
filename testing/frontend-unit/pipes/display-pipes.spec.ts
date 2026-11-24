@@ -1,6 +1,7 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 
 describe('Display Formatting Pipes', () => {
+  // Verifies consistent date and currency-style display formatting.
   const decimalPipe = new DecimalPipe('en-US');
   const datePipe = new DatePipe('en-US');
 

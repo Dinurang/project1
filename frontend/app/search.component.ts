@@ -41,6 +41,7 @@ import { CommonModule } from '@angular/common';
             <td>{{res.hotelName}}</td>
             <td>{{res.roomType}}</td>
             <td style="font-weight:bold;">
+              <!-- Unavailable options stay visible, but their price is intentionally omitted. -->
               <span *ngIf="res.price !== null && res.price !== undefined; else unavailablePrice">\${{res.price | number:'1.2-2'}}</span>
               <ng-template #unavailablePrice>-</ng-template>
             </td>

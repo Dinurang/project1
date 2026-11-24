@@ -48,6 +48,7 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
     try {
+      // Inspect the signed token payload locally to prevent navigation after expiry.
       const payload = JSON.parse(atob(token.split('.')[1]));
       return payload.exp * 1000 > Date.now();
     } catch {

@@ -36,6 +36,7 @@ import jakarta.servlet.Filter;
 @SpringBootTest(classes = SunTravelsApplication.class)
 @Transactional
 class AuthenticationTest {
+    // Tests the complete security filter chain, JWT validation, signup, login, and role authorization.
 
     @Autowired
     private WebApplicationContext webApplicationContext;

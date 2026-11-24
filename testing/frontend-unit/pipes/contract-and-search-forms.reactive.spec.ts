@@ -1,6 +1,7 @@
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 describe('Sun Travels Reactive Forms', () => {
+  // Verifies required fields, numeric constraints, and dynamic room form arrays.
   let fb: FormBuilder;
 
   function buildRoomTypeGroup(): FormGroup {

@@ -9,6 +9,7 @@ import { ContractListComponent } from '../../../frontend/app/contract-list.compo
 import { AuthService } from '../../../frontend/app/core/services/auth.service';
 
 describe('Contract Administrator Components', () => {
+  // Verifies rendered administrator data and contract HTTP states.
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {

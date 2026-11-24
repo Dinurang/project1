@@ -90,6 +90,7 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid username or password.");
         }
 
+        // Prefer the role-specific profile name, while retaining a safe username fallback.
         String fullName = user.getUsername();
         if (user.getRole() == Role.CONTRACT_ADMIN) {
             fullName = adminRepository.findByUserUsername(user.getUsername())
