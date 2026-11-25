@@ -114,9 +114,7 @@ Acceptance Criteria:
 - Supports adding and removing room types while requiring at least one room type when saving.
 - Saves edits through the backend and displays a success message; failed edits display an error and do not silently appear successful.
 - Provides a delete action with a confirmation prompt; cancelling leaves the contract unchanged.
-- Confirmed deletion removes the contract and its associated room types from storage and the management list.
-- Missing contract IDs and updates without room types return clear client errors.
-- Call-center agents and unauthenticated users cannot use the edit or delete API.
+
 
 
 
