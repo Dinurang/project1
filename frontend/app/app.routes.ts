@@ -4,6 +4,7 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard.compon
 import { AgentDashboardComponent } from './features/agent/agent-dashboard.component';
 import { ContractFormComponent } from './contract-form.component';
 import { ContractListComponent } from './contract-list.component';
+import { ContractManagementComponent } from './features/admin/contract-management.component';
 import { SearchContractComponent } from './search-contract/search-contract.component';
 import { SearchComponent } from './search.component';
 import { authGuard } from './core/guards/auth.guard';
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'dashboard', redirectTo: 'contracts', pathMatch: 'full' },
       { path: 'add-contract', component: ContractFormComponent },
       { path: 'contracts', component: ContractListComponent },
+      { path: 'edit-contracts', component: ContractManagementComponent },
       { path: 'search-contracts', component: SearchContractComponent }
     ]
   },

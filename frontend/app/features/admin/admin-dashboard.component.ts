@@ -16,6 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="sub-nav">
         <a routerLink="/admin/add-contract" routerLinkActive="active" class="nav-pill">Load Contract</a>
         <a routerLink="/admin/contracts" routerLinkActive="active" class="nav-pill">View Contracts</a>
+        <a routerLink="/admin/edit-contracts" routerLinkActive="active" class="nav-pill">Edit Contracts</a>
         <a routerLink="/admin/search-contracts" routerLinkActive="active" class="nav-pill">Search Contracts</a>
       </div>
     </div>

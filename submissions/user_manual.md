@@ -125,7 +125,23 @@ negative, and maximum adults must be at least one.
 
 If no contracts are saved, the page displays an empty state instead of failing.
 
-### 5.3 Search contracts
+### 5.3 Edit or delete hotel contracts
+
+1. Select **Edit Contracts** beside **View Contracts**.
+2. Select **Edit** on the contract to change.
+3. Update the hotel name, validity dates, markup, or room type details. Use
+   **+ Add Room Type** to add a room type, or **Remove** to remove one; each
+   contract must keep at least one room type.
+4. Select **Save Changes**. A success message appears and the contract list
+   reflects the saved values. If the update fails, the page displays an error
+   and keeps the contract available for another attempt.
+5. To remove a contract and its room types, select **Delete** and confirm the
+   browser prompt. Cancelling the prompt leaves the contract unchanged.
+
+Deletion cannot be undone. Changes take effect immediately in later contract
+views and room availability searches.
+
+### 5.4 Search contracts
 
 1. Select **Search Contracts**.
 2. Enter a hotel name, an active date, or both.

@@ -13,7 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -501,5 +503,75 @@ class SpringDbTest {
                 .andExpect(status().isForbidden());
 
         assertThat(contractRepository.count()).isEqualTo(countBefore);
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. Authenticated Admin PUT and DELETE update MySQL contract records
+    // -------------------------------------------------------------------------
+    @Test
+    @DisplayName("TC-E2E-08: PUT updates contract and room types, then DELETE removes contract and room rows")
+    void shouldUpdateAndDeleteContractAndRoomTypesViaAuthenticatedApi() throws Exception {
+        String adminToken = registerAndLoginAdmin(
+                "e2e_admin_08", "e2e_admin_08@suntravels.com", "EMP-E2E-08", "Kavindi Silva"
+        );
+        String contractPayload = """
+                {
+                  "hotelName": "Original Hotel",
+                  "validFrom": "2026-12-01",
+                  "validTo": "2026-12-31",
+                  "markup": 15.00,
+                  "roomTypes": [
+                    { "typeName": "Original Room", "price": 100.00, "noOfRooms": 5, "maxAdults": 2 }
+                  ]
+                }
+                """;
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contracts")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contractPayload))
+                .andExpect(status().isOk())
+                .andReturn();
+        long contractId = ((Number) JsonPath.read(createResult.getResponse().getContentAsString(), "$.id")).longValue();
+
+        mockMvc.perform(put("/api/admin/contracts/" + contractId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "hotelName": "Updated Hotel",
+                                  "validFrom": "2027-01-01",
+                                  "validTo": "2027-01-31",
+                                  "markup": 20.00,
+                                  "roomTypes": [
+                                    { "typeName": "Updated Room", "price": 250.00, "noOfRooms": 3, "maxAdults": 4 }
+                                  ]
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hotelName").value("Updated Hotel"))
+                .andExpect(jsonPath("$.administrator.employeeCode").value("EMP-E2E-08"))
+                .andExpect(jsonPath("$.roomTypes.length()").value(1))
+                .andExpect(jsonPath("$.roomTypes[0].typeName").value("Updated Room"));
+
+        entityManager.flush();
+        entityManager.clear();
+        Contract updated = contractRepository.findById(contractId).orElseThrow();
+        assertThat(updated.getHotelName()).isEqualTo("Updated Hotel");
+        assertThat(updated.getRoomTypes()).hasSize(1);
+        assertThat(updated.getRoomTypes().get(0).getTypeName()).isEqualTo("Updated Room");
+
+        mockMvc.perform(delete("/api/admin/contracts/" + contractId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken))
+                .andExpect(status().isNoContent());
+
+        entityManager.flush();
+        entityManager.clear();
+        assertThat(contractRepository.findById(contractId)).isEmpty();
+        Number remainingRoomTypes = (Number) entityManager.createNativeQuery(
+                        "select count(*) from room_type where contract_id = ?1")
+                .setParameter(1, contractId)
+                .getSingleResult();
+        assertThat(remainingRoomTypes.longValue()).isZero();
     }
 }

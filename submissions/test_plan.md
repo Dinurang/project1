@@ -14,7 +14,7 @@ Sun Travels is a role-based hotel contract and room quotation application.
   served on `http://localhost:8080`.
 - **Database:** MySQL 8 database `suntravels`.
 - **Roles:**
-  - `CONTRACT_ADMIN`: creates, views, and searches hotel contracts.
+  - `CONTRACT_ADMIN`: creates, views, edits, deletes, and searches hotel contracts.
   - `CALL_CENTER_AGENT`: searches rooms and calculates customer quotations.
 
 ## 3. Test objectives
@@ -23,7 +23,7 @@ The tests verify that:
 
 1. Users can register and authenticate with the correct role.
 2. Protected endpoints reject unauthenticated and incorrectly authorized users.
-3. Contract and room type data is persisted correctly.
+3. Contract and room type data is created, edited, and deleted correctly.
 4. Contract date ranges are applied correctly to searches.
 5. Room availability is calculated from room count and adult capacity.
 6. Available and unavailable room types are returned with the correct status.
@@ -39,7 +39,10 @@ The tests verify that:
 
 - Signup and login for both roles.
 - JWT creation, storage, attachment, expiry, and rejection.
-- Admin contract creation, listing, and searching.
+- Admin contract creation, listing, editing, deletion, and searching.
+- Contract updates preserve the original administrator, replace room types
+  correctly, and reject missing contracts or updates without room types.
+- Contract deletion removes associated room types and requires UI confirmation.
 - Agent room search and quotation calculation.
 - Available and unavailable room results.
 - Database entities, repositories, relationships, and cascading room types.
@@ -47,6 +50,8 @@ The tests verify that:
 - Validation, malformed JSON, invalid dates, and repository failures.
 - Angular form validation, route guards, authentication service, JWT
   interceptor, admin components, and display pipes.
+- Angular application shell, authentication page, agent dashboard, contract
+  creation, room search, and contract search page behavior.
 - CORS preflight and actual cross-origin requests.
 
 ### Out of scope
@@ -93,13 +98,14 @@ room counts, adult capacities, markups, and duplicate identifiers.
 | Test type | Contained test cases | Framework / tool | Status |
 |---|---|---|---|
 | Backend unit — business logic | `TC-BL-01` to `TC-BL-07`: availability, nights, adult/room counts, markup, rounding, and null input | JUnit 5, Mockito, AssertJ | **Pass — 7/7** |
-| Backend unit — REST controllers | `TC-CTRL-01` to `TC-CTRL-07`: contract CRUD/search, agent search, auth success/error responses | JUnit 5, Mockito, Spring MockMvc | **Pass — 7/7** |
+| Backend unit — REST controllers | `TC-CTRL-01` to `TC-CTRL-11`: contract CRUD/search, agent search, auth success/error responses | JUnit 5, Mockito, Spring MockMvc | **Pass — 11/11** |
 | Backend unit — exception handling | `TC-EX-01` to `TC-EX-07`: missing profiles, repository failures, malformed JSON, invalid dates, auth errors, empty search | JUnit 5, Mockito, Spring MockMvc | **Pass — 7/7** |
 | Database / repository | `TC-DB-01` to `TC-DB-15`: persistence, relationships, cascade, date boundaries, availability, listing, and search | JUnit 5, Spring Boot Test, Hibernate/JPA, MySQL | **Pass — 15/15** |
 | API — authentication / authorization | `TC-AUTH-01` to `TC-AUTH-07`: JWT, login, role access, duplicate/invalid signup | JUnit 5, Spring Security, MockMvc | **Pass — 7/7** |
 | API — CORS | `TC-CORS-01` to `TC-CORS-06`: allowed origin, preflight, disallowed origin/method/header | JUnit 5, Spring Security, MockMvc | **Pass — 6/6** |
-| API + database integration | `TC-E2E-01` to `TC-E2E-07`: signup, contracts, search, unavailable inventory, duplicate and cross-role safety | JUnit 5, Spring Boot Test, MockMvc, JPA/Hibernate, MySQL | **Pass — 7/7** |
-| Frontend — components | `TC-FE-COMP-01` to `TC-FE-COMP-03`: admin dashboard and contract list states | Angular TestBed, Vitest, JSDOM | **Pass — 3/3** |
+| API + database integration | `TC-E2E-01` to `TC-E2E-08`: signup, contract CRUD, search, unavailable inventory, duplicate and cross-role safety | JUnit 5, Spring Boot Test, MockMvc, JPA/Hibernate, MySQL | **Pass — 8/8** |
+| Frontend — components | `TC-FE-COMP-01` to `TC-FE-COMP-07`: admin dashboard, contract list, edit, delete confirmation, and error states | Angular TestBed, Vitest, JSDOM | **Pass — 7/7** |
+| Frontend — application pages | `TC-FE-PAGE-01` to `TC-FE-PAGE-12`: app shell, agent dashboard, authentication, contract creation, room search, and contract search | Angular TestBed, Vitest, JSDOM, HttpTestingController | **Pass — 12/12** |
 | Frontend — reactive forms | `TC-FE-FORM-01` to `TC-FE-FORM-05`: contract/search validation and dynamic room rows | Angular TestBed, Vitest, JSDOM | **Pass — 5/5** |
 | Frontend — display pipes | `TC-FE-PIPE-01` to `TC-FE-PIPE-03`: price, null, zero, and date formatting | Angular DecimalPipe/DatePipe, Vitest | **Pass — 3/3** |
 | Frontend — route guards | `TC-FE-GUARD-01` to `TC-FE-GUARD-05`: authentication and role-based routing | Angular TestBed, Vitest, JSDOM | **Pass — 5/5** |
@@ -126,6 +132,10 @@ room counts, adult capacities, markups, and duplicate identifiers.
 - `TC-CTRL-05`: Returns an empty JSON array when no room matches.
 - `TC-CTRL-06`: Returns success on valid signup and `400` on duplicate or invalid signup.
 - `TC-CTRL-07`: Returns success on valid login and `401` on invalid login.
+- `TC-CTRL-08`: Updates contract details and replaces the associated room types while preserving the original administrator.
+- `TC-CTRL-09`: Rejects an update with no room types using `400`.
+- `TC-CTRL-10`: Returns `404` when updating or deleting a missing contract.
+- `TC-CTRL-11`: Deletes an existing contract successfully.
 
 #### Exception handling: `testing/backend-unit/exception handling/ExceptionHandlingTest.java`
 
@@ -161,7 +171,7 @@ room counts, adult capacities, markups, and duplicate identifiers.
 - `TC-AUTH-02`: Rejects malformed or tampered JWT bearer tokens.
 - `TC-AUTH-03`: Rejects expired JWT bearer tokens.
 - `TC-AUTH-04`: Authenticates an administrator and allows admin routes while forbidding agent routes.
-- `TC-AUTH-05`: Authenticates an agent and allows agent routes while forbidding admin routes.
+- `TC-AUTH-05`: Authenticates an agent, allows agent routes, and forbids admin view, update, and delete routes.
 - `TC-AUTH-06`: Returns `401` for wrong passwords and nonexistent users.
 - `TC-AUTH-07`: Rejects missing role-specific signup fields and duplicate usernames.
 
@@ -183,12 +193,32 @@ room counts, adult capacities, markups, and duplicate identifiers.
 - `TC-E2E-05`: Excludes expired contracts and reports insufficient inventory as `Unavailable`.
 - `TC-E2E-06`: Rejects duplicate username or employee code without changing existing data.
 - `TC-E2E-07`: Rejects an agent attempting an administrator contract write and creates no database record.
+- `TC-E2E-08`: Updates a persisted contract and room type, then deletes the contract and verifies associated room rows are removed.
 
 #### Frontend components: `testing/frontend-unit/components/admin-components.spec.ts`
 
 - `TC-FE-COMP-01`: Displays the logged-in administrator name and contract navigation links.
 - `TC-FE-COMP-02`: Fetches contracts and displays hotel, creator, employee code, and room type.
 - `TC-FE-COMP-03`: Handles an empty contract response without component errors.
+- `TC-FE-COMP-04`: Loads contracts in Edit Contracts, submits updated contract and room details, and displays the saved values.
+- `TC-FE-COMP-05`: Requires delete confirmation, leaves a cancelled deletion unchanged, and removes a confirmed deletion from the page.
+- `TC-FE-COMP-06`: Displays a clear error when an update request fails.
+- `TC-FE-COMP-07`: Displays a clear error and retains the contract when a confirmed deletion fails.
+
+#### Application pages: `testing/frontend-unit/components/page-components.spec.ts`
+
+- `TC-FE-PAGE-01`: Hides global navigation when logged out and invokes logout for an authenticated user.
+- `TC-FE-PAGE-02`: Displays the agent name and room-search navigation link.
+- `TC-FE-PAGE-03`: Switches signup roles, shows administrator-specific fields, and submits registration.
+- `TC-FE-PAGE-04`: Displays login failures and clears the submitting state.
+- `TC-FE-PAGE-05`: Navigates to the role dashboard after a successful login.
+- `TC-FE-PAGE-06`: Submits a contract with multiple room types and resets the form after success.
+- `TC-FE-PAGE-07`: Reports contract-save failures.
+- `TC-FE-PAGE-08`: Submits room-search criteria and renders available/unavailable results.
+- `TC-FE-PAGE-09`: Displays the no-results state after an empty room search.
+- `TC-FE-PAGE-10`: Reports room-search API failures.
+- `TC-FE-PAGE-11`: Loads, filters, and resets contract search results.
+- `TC-FE-PAGE-12`: Clears contract results and displays an error when contract search fails.
 
 #### Frontend reactive forms: `testing/frontend-unit/pipes/contract-and-search-forms.reactive.spec.ts`
 
@@ -221,10 +251,10 @@ room counts, adult capacities, markups, and duplicate identifiers.
 
 ### Overall test status
 
-- **Backend / API / database:** **56 passed, 0 failed**
-- **Frontend unit tests:** **20 passed, 0 failed**
+- **Backend / API / database:** **61 passed, 0 failed**
+- **Frontend unit tests:** **36 passed, 0 failed**
 - **Frontend production build:** **Passed**
-- **Test suites:** **12 suites passed**
+- **Test suites:** **13 suites passed**
 
 ## 7. Requirement-oriented test scenarios
 
@@ -235,15 +265,19 @@ room counts, adult capacities, markups, and duplicate identifiers.
 | TS-03 | Login with valid credentials | JWT is issued and the correct dashboard opens |
 | TS-04 | Login with invalid credentials | Request is rejected with a clear error |
 | TS-05 | Create a contract with room types | Contract and room types are persisted |
-| TS-06 | Search contracts by hotel/date | Only matching valid contracts are returned |
-| TS-07 | Search with enough rooms and capacity | Room type status is `Available` |
-| TS-08 | Search with insufficient rooms | Room type status is `Unavailable` |
-| TS-09 | Search with excessive adults | Room type status is `Unavailable` |
-| TS-10 | Search across an invalid contract period | Contract is not returned |
-| TS-11 | Use the wrong role on an endpoint | Request returns `403` |
-| TS-12 | Send an unauthenticated request | Request returns `401` |
-| TS-13 | Submit invalid form values | Submission is disabled or validation is shown |
-| TS-14 | Load an empty contract list | A safe empty state is displayed |
+| TS-06 | Edit a contract and its room types | Updated values persist; original administrator is preserved |
+| TS-07 | Update without room types or update/delete a missing contract | Request returns `400` or `404` and no unintended data change occurs |
+| TS-08 | Delete a contract | Contract and associated room types are removed |
+| TS-09 | Cancel delete confirmation | Contract remains unchanged and no delete request is sent |
+| TS-10 | Search contracts by hotel/date | Only matching valid contracts are returned |
+| TS-11 | Search with enough rooms and capacity | Room type status is `Available` |
+| TS-12 | Search with insufficient rooms | Room type status is `Unavailable` |
+| TS-13 | Search with excessive adults | Room type status is `Unavailable` |
+| TS-14 | Search across an invalid contract period | Contract is not returned |
+| TS-15 | Use the wrong role on an admin endpoint | Request returns `403`, including update and delete |
+| TS-16 | Send an unauthenticated request | Request returns `401`/`403` according to the security filter configuration |
+| TS-17 | Submit invalid form values | Submission is disabled or validation is shown |
+| TS-18 | Load an empty contract list | A safe empty state is displayed |
 
 ## 8. Entry criteria
 

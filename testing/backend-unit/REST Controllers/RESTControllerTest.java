@@ -20,7 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -97,7 +99,7 @@ class RESTControllerTest {
         sampleContract.setValidTo(LocalDate.of(2026, 12, 31));
         sampleContract.setMarkup(new BigDecimal("18.00"));
         sampleContract.setAdministrator(sampleAdmin);
-        sampleContract.setRoomTypes(List.of(room));
+        sampleContract.setRoomTypes(new java.util.ArrayList<>(List.of(room)));
     }
 
     // -------------------------------------------------------------------------
@@ -170,6 +172,94 @@ class RESTControllerTest {
                         .param("activeDate", "2027-02-01"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @DisplayName("TC-CTRL-08: PUT /api/admin/contracts/{id} updates contract and replaces room types")
+    void shouldUpdateContractAndRoomTypes() throws Exception {
+        when(contractRepo.findById(100L)).thenReturn(Optional.of(sampleContract));
+        when(contractRepo.save(any(Contract.class))).thenReturn(sampleContract);
+
+        mockMvc.perform(put("/api/admin/contracts/100")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "hotelName": "Updated Hotel",
+                                  "validFrom": "2027-01-01",
+                                  "validTo": "2027-01-31",
+                                  "markup": 20.00,
+                                  "roomTypes": [
+                                    {
+                                      "typeName": "Updated Suite",
+                                      "price": 300.00,
+                                      "noOfRooms": 4,
+                                      "maxAdults": 2
+                                    }
+                                  ]
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(100))
+                .andExpect(jsonPath("$.hotelName").value("Updated Hotel"))
+                .andExpect(jsonPath("$.administrator.fullName").value("Kasun Jayawardena"))
+                .andExpect(jsonPath("$.roomTypes.length()").value(1))
+                .andExpect(jsonPath("$.roomTypes[0].typeName").value("Updated Suite"));
+
+        verify(contractRepo).save(sampleContract);
+    }
+
+    @Test
+    @DisplayName("TC-CTRL-09: PUT /api/admin/contracts/{id} returns 400 when no room types are supplied")
+    void shouldRejectContractUpdateWithoutRoomTypes() throws Exception {
+        when(contractRepo.findById(100L)).thenReturn(Optional.of(sampleContract));
+
+        mockMvc.perform(put("/api/admin/contracts/100")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "hotelName": "Updated Hotel",
+                                  "validFrom": "2027-01-01",
+                                  "validTo": "2027-01-31",
+                                  "markup": 20.00,
+                                  "roomTypes": []
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("TC-CTRL-10: PUT and DELETE /api/admin/contracts/{id} return 404 for a missing contract")
+    void shouldReturnNotFoundWhenUpdatingOrDeletingMissingContract() throws Exception {
+        when(contractRepo.findById(999L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/api/admin/contracts/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "hotelName": "Missing",
+                                  "validFrom": "2027-01-01",
+                                  "validTo": "2027-01-31",
+                                  "markup": 20.00,
+                                  "roomTypes": [
+                                    { "typeName": "Suite", "price": 300, "noOfRooms": 4, "maxAdults": 2 }
+                                  ]
+                                }
+                                """))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(delete("/api/admin/contracts/999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("TC-CTRL-11: DELETE /api/admin/contracts/{id} removes an existing contract")
+    void shouldDeleteContract() throws Exception {
+        when(contractRepo.findById(100L)).thenReturn(Optional.of(sampleContract));
+
+        mockMvc.perform(delete("/api/admin/contracts/100"))
+                .andExpect(status().isNoContent());
+
+        verify(contractRepo).delete(sampleContract);
     }
 
     // -------------------------------------------------------------------------

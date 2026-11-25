@@ -101,6 +101,23 @@ Acceptance Criteria:
 - Provides clear navigation links/actions for login, signup, contract management, and room search according to user state and role.
 - Loads smoothly and remains responsive during navigation.
 
+Story 10 — Editing and Deleting Hotel Contracts by Contract Administrator
+-------------------------------------------------------------------------
+As a Sun Travels contract administrator,
+I want to edit or delete saved hotel contracts and their room types,
+so that I can keep contract information current and remove contracts that are
+no longer valid.
+
+Acceptance Criteria:
+- Provides an **Edit Contracts** option beside **View Contracts** in the administrator navigation.
+- Lists saved contracts and allows an administrator to edit the hotel name, validity dates, markup, and room type details.
+- Supports adding and removing room types while requiring at least one room type when saving.
+- Saves edits through the backend and displays a success message; failed edits display an error and do not silently appear successful.
+- Provides a delete action with a confirmation prompt; cancelling leaves the contract unchanged.
+- Confirmed deletion removes the contract and its associated room types from storage and the management list.
+- Missing contract IDs and updates without room types return clear client errors.
+- Call-center agents and unauthenticated users cannot use the edit or delete API.
+
 
 
 
