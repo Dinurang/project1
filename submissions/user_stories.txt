@@ -118,38 +118,3 @@ Acceptance Criteria:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-======================================================================================================
-
-Acceptance Criteria (Definition of Done)
-A user story is paired with acceptance criteria—a concrete checklist of rules and edge cases that 
-must pass before the feature is considered complete.
-
-
-Traits of a Good User Story (INVEST)
-Teams evaluate whether a user story is ready for development using the INVEST criteria:
-
-Independent: Can be built and tested on its own without waiting on unrelated features.
-
-Negotiable: Describes the user goal rather than rigid UI layouts or database columns, leaving room for developer design choices.
-
-Valuable: Delivers clear value to an end user or stakeholder.
-
-Estimable: Clear enough that developers can estimate how long it will take to build.
-
-Small: Sized to fit comfortably within a single development sprint (typically a few days of work).
-
-Testable: Includes clear acceptance criteria so QA or automated tests can verify pass/fail objectively.
